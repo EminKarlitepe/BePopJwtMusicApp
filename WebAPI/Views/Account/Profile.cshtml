@@ -1,0 +1,134 @@
+@model Core.Entities.User
+@{
+    ViewData["Title"] = "Profilim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var followingArtists = ViewBag.FollowingArtists as List<Core.Entities.Artist> ?? new List<Core.Entities.Artist>();
+    int followingArtistsCount = ViewBag.FollowingArtistsCount ?? 0;
+    int followersCount = ViewBag.FollowersCount ?? 0;
+    int followingUsersCount = ViewBag.FollowingUsersCount ?? 0;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Bebop/assets/css/profile.css" asp-append-version="true" />
+}
+
+<div class="page-content page-container" id="page-content">
+    <div class="padding sr">
+        <div class="row">
+
+            <!-- SOL KOLON -->
+            <div class="col-md-4">
+
+                <!-- Profil kartı -->
+                <div class="profile-card p-4 text-center mb-3">
+                    <img src="@(string.IsNullOrEmpty(Model.ProfileImageUrl) ? Url.Content("~/Bebop/assets/img/default-avatar.png") : Model.ProfileImageUrl)"
+                         class="profile-avatar mb-3" />
+                    <h5 class="mb-0 text-white">@(!string.IsNullOrEmpty(Model.DisplayName) ? Model.DisplayName : Model.Username)</h5>
+                    <div style="font-size:12px;color:rgba(255,255,255,.4);" class="mb-3">@Model.Email</div>
+
+                    <div class="d-flex justify-content-around mt-2">
+                        <a href="@Url.Action("Followers", "Account", new { id = Model.UserId })" class="stat-btn">
+                            <div class="h5 mb-0">@followersCount</div>
+                            <small>Takipçi</small>
+                        </a>
+                        <a href="@Url.Action("Following", "Account", new { id = Model.UserId })" class="stat-btn">
+                            <div class="h5 mb-0">@followingUsersCount</div>
+                            <small>Takip</small>
+                        </a>
+                        <div class="stat-btn" style="cursor:default;">
+                            <div class="h5 mb-0">@followingArtistsCount</div>
+                            <small>Sanatçı</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kullanıcı Ara -->
+                <div class="profile-card p-3 mb-3">
+                    <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:10px;">Kullanıcı Ara</div>
+                    <div class="user-search-wrap">
+                        <input type="text" id="userSearchInput" class="user-search-input" placeholder="Kullanıcı adı veya isim..." autocomplete="off" />
+                        <div class="user-search-results" id="userSearchResults"></div>
+                    </div>
+                </div>
+
+                <!-- Takip Ettiğim Sanatçılar -->
+                <div class="profile-card p-3">
+                    <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:10px;">Takip Ettiğim Sanatçılar</div>
+                    @if (!followingArtists.Any())
+                    {
+                        <p style="font-size:13px;color:rgba(255,255,255,.35);margin:0;">Henüz hiçbir sanatçıyı takip etmiyorsun.</p>
+                    }
+                    else
+                    {
+                        @foreach (var artist in followingArtists)
+                        {
+                            <div class="artist-follow-item">
+                                <a href="@Url.Action("Detail", "Artist", new { id = artist.ArtistId })"
+                                       class="artist-follow-avatar"
+                                       style="background-image:url('@(string.IsNullOrEmpty(artist.ProfileImageUrl) ? Url.Content("~/Bebop/assets/img/b6.jpg") : artist.ProfileImageUrl)')">
+                                </a>
+                                <div style="min-width:0;">
+                                    <a href="@Url.Action("Detail", "Artist", new { id = artist.ArtistId })" class="artist-follow-name">@artist.Name</a>
+                                    @if (!string.IsNullOrEmpty(artist.Country))
+                                    {
+                                        <span class="artist-follow-country">@artist.Country</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+            </div>
+
+            <!-- SAĞ KOLON -->
+            <div class="col-md-8">
+                <div class="profile-card p-4">
+                    <div style="font-size:15px;font-weight:600;color:#fff;margin-bottom:20px;">Profil Bilgilerim</div>
+
+                    @if (TempData["ProfileSaved"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show">
+                            @TempData["ProfileSaved"]
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        </div>
+                    }
+
+                    <form asp-action="Profile" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label style="font-size:12px;color:rgba(255,255,255,.5);">Görünen Ad</label>
+                                <input asp-for="DisplayName" class="form-control" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label style="font-size:12px;color:rgba(255,255,255,.5);">Ülke</label>
+                                <input asp-for="Country" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label style="font-size:12px;color:rgba(255,255,255,.5);">Doğum Tarihi</label>
+                                <input asp-for="DateOfBirth" type="date" class="form-control" />
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label style="font-size:12px;color:rgba(255,255,255,.5);">Profil Resmi URL</label>
+                                <input asp-for="ProfileImageUrl" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;color:rgba(255,255,255,.5);">Hakkımda</label>
+                            <textarea asp-for="Bio" class="form-control" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Kaydet</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Bebop/assets/js/profile-search.js" asp-append-version="true"></script>
+}

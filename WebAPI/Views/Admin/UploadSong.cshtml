@@ -1,0 +1,135 @@
+@model BepopStreamProject.Models.UploadSongViewModel
+@{
+    ViewData["Title"] = "Şarkı Ekle";
+    ViewData["Active"] = "Songs";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <span>Yeni şarkı ekle veya harici URL gir</span>
+    <a href="/Admin/Songs" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Geri Dön
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        <i class="fas fa-check-circle"></i> @TempData["Success"]
+        <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+    </div>
+}
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="UploadSong" asp-controller="Admin" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <!-- Şarkı Adı -->
+                <div class="col-md-6 form-group">
+                    <label>Şarkı Adı <span class="text-danger">*</span></label>
+                    <input asp-for="Title" class="form-control" placeholder="Şarkı adını girin..." />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <!-- Sanatçı -->
+                <div class="col-md-6 form-group position-relative">
+                    <label>Sanatçı <span class="text-danger">*</span></label>
+                    <input type="text" id="artistSearch" name="artistName" class="form-control" placeholder="Sanatçı adı yazın" autocomplete="off" />
+                    <input asp-for="ArtistId" type="hidden" id="ArtistId" />
+                    <div id="artistResults" class="list-group position-absolute" style="z-index:1050; width:100%; display:none; max-height:220px; overflow:auto; box-shadow:0 2px 6px rgba(0,0,0,.15);">
+                        @* populated by AJAX *@
+                    </div>
+                    <span asp-validation-for="ArtistId" class="text-danger small"></span>
+                </div>
+
+                <!-- Albüm -->
+                <div class="col-md-6 form-group position-relative">
+                    <label>Albüm <small class="text-muted">(opsiyonel)</small></label>
+                    <input type="text" id="albumSearch" class="form-control" placeholder="Albüm adı yazın" autocomplete="off" />
+                    <input asp-for="AlbumId" type="hidden" id="AlbumId" />
+                    <div id="albumResults" class="list-group position-absolute" style="z-index:1050; width:100%; display:none; max-height:220px; overflow:auto; box-shadow:0 2px 6px rgba(0,0,0,.15);">
+                    </div>
+                </div>
+
+                <!-- Seviye -->
+                <div class="col-md-6 form-group">
+                    <label>Erişim Seviyesi <span class="text-danger">*</span></label>
+                    <select asp-for="Level" class="form-control">
+                        <option value="1">Ücretsiz</option>
+                        <option value="2">Gold</option>
+                        <option value="3">Premium</option>
+                    </select>
+                </div>
+
+                <!-- MP3 Dosyası -->
+                <div class="col-md-6 form-group">
+                    <label>MP3 Dosyası</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" asp-for="Mp3File"
+                                   accept=".mp3,.wav,.ogg,.flac" id="mp3Input" />
+                            <label class="custom-file-label" for="mp3Input">Dosya seçin...</label>
+                        </div>
+                    </div>
+                    <small class="text-muted">MP3, WAV, OGG, FLAC · Maks 50MB</small>
+                    <span asp-validation-for="Mp3File" class="text-danger small d-block"></span>
+                </div>
+
+                <!-- Harici URL -->
+                <div class="col-md-6 form-group">
+                    <label>Harici URL <small class="text-muted">(YouTube veya direkt link)</small></label>
+                    <input asp-for="ExternalUrl" class="form-control"
+                           placeholder="https://youtube.com/watch?v=... veya https://..." />
+                    <small class="text-muted">Dosya yüklemek yerine URL girebilirsiniz</small>
+                </div>
+
+                <!-- Kapak Resmi -->
+                <div class="col-md-6 form-group">
+                    <label>Kapak Resmi <small class="text-muted">(opsiyonel)</small></label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" asp-for="CoverFile"
+                                   accept="image/*" id="coverInput" />
+                            <label class="custom-file-label" for="coverInput">Resim seçin...</label>
+                        </div>
+                    </div>
+                    <small class="text-muted">JPG, PNG, WEBP · 1:1 kare önerilir</small>
+                </div>
+
+                <!-- Türler -->
+                <div class="col-12 form-group">
+                    <label>Türler <small class="text-muted">(Birden çok seçebilirsiniz)</small></label>
+                    <div>
+                        @if (Model.Genres != null && Model.Genres.Any())
+                        {
+                            <div class="d-flex flex-wrap">
+                                @foreach (var genre in Model.Genres)
+                                {
+                                    <div class="form-check mr-3 mb-2">
+                                        <input class="form-check-input" type="checkbox" name="GenreIds" value="@genre.GenreId" id="g_@genre.GenreId" @(Model.GenreIds.Contains(genre.GenreId) ? "checked" : "") />
+                                        <label class="form-check-label" for="g_@genre.GenreId">@genre.Name</label>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="small text-muted">Henüz tür eklenmemiş.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Şarkıyı Kaydet
+            </button>
+            <a href="/Admin/Songs" class="btn btn-secondary ml-2">
+                <i class="fas fa-times"></i> İptal
+            </a>
+        </form>
+    </div>
+</div>

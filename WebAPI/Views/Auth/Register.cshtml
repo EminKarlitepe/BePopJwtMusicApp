@@ -1,0 +1,104 @@
+@using BepopStreamProject.DTO_s.Auth
+@model UserRegisterDto
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <title>Kayıt Ol | Bepop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="/Bebop/assets/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="/Bebop/assets/css/theme.css" type="text/css" />
+
+    <link rel="stylesheet" href="~/css/auth-pages.css" asp-append-version="true" />
+</head>
+<body class="layout-row bg-dark">
+    <div class="d-flex flex-column flex">
+        <div class="row no-gutters h-100">
+            <div class="col-md-6 d-none d-md-block bg-img" style="background-image:url(/Bebop/assets/img/b7.jpg)">
+                <div class="p-5 d-flex flex-column h-100" style="background: rgba(0,0,0,0.3)">
+                    <h4 class="mb-3 text-white font-weight-bold">Bepop</h4>
+                    <div class="text-white-50">Müziğin ritmini her yerde hisset.</div>
+                    <div class="flex"></div>
+                    <div class="d-flex text-sm text-white-50">
+                        <a href="#" class="text-white mr-3">Hakkımızda</a>
+                        <a href="#" class="text-white">Destek</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6" id="content-body">
+                <div class="p-4 p-md-5 auth-card-wrap">
+                    <h3 class="text-white mb-1">Hesabını Oluştur</h3>
+                    <p class="text-muted mb-4">Milyonlarca şarkıya erişim için ilk adımı at.</p>
+
+                    <form asp-action="Register" method="post">
+                        <div class="form-group">
+                            <label class="text-muted">Kullanıcı Adı</label>
+                            <input asp-for="Username" class="form-control" placeholder="kullaniciadi" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="text-muted">E-posta</label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="isim@ornek.com" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="text-muted">Şifre</label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="••••••" required />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="text-muted d-block mb-3">Abonelik Planı</label>
+                            <div class="pkg-container">
+                                @{
+                                    var packages = new[] {
+                                                                new { ID = 1, Name = "Basic", Price = "Ücretsiz" },
+                                                                new { ID = 2, Name = "Gold", Price = "₺99.99" },
+                                                                new { ID = 3, Name = "Premium", Price = "₺149.99" }
+                                                                };
+                                }
+                                @foreach (var p in packages)
+                                {
+                                    <label class="pkg-item">
+                                        <input type="radio" name="MembershipLevel" value="@p.ID" @(p.ID == 1 ? "checked" : "")>
+                                        <div class="pkg-card">
+                                            <span class="pkg-name">@p.Name</span>
+                                            <span class="pkg-price">@p.Price</span>
+                                        </div>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-4">Kayıt Ol</button>
+
+                        <div class="text-center">
+                            <span class="text-muted">Zaten üye misin?</span>
+                            <a href="/Auth/Login" class="text-primary font-weight-bold ml-1">Giriş Yap</a>
+                        </div>
+                    </form>
+
+                    @if (ViewBag.Message != null)
+                    {
+                        <div class="alert alert-danger mt-3 border-0">
+                            <i class="mr-2" data-feather="alert-circle"></i> @ViewBag.Message
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Bebop/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/Bebop/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        feather.replace(); 
+    </script>
+</body>
+</html>

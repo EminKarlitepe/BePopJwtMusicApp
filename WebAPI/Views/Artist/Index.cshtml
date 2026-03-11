@@ -1,0 +1,143 @@
+@model BepopStreamProject.Models.ArtistPageViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var userLevel = User.GetUserLevel();
+    var userId = User.GetUserId();
+}
+<div>
+    <div class="page-content page-container" id="page-content">
+        <div class="padding sr" id="list" data-plugin="list">
+            <div class="page-hero">
+                <div class="media bg-media">
+                    <div class="media-content" style="background-image:url(/Bebop/assets/img/b6.jpg)"></div>
+                </div>
+                <div class="pos-rlt">
+                    <h1 class="display-3 font-weight-bold text-white">@ViewBag.v1 Artists</h1>
+                </div>
+            </div>
+            <div class="d-lg-flex pos-rlt">
+                <div class="flex">
+                    <div class="pb-4 d-flex sr-item" id="filter-tag">
+                        <div class="no-shrink my-2">Ülkeler</div>
+                        <div class="mx-3">
+                            @foreach (var country in Model.Countries)
+                            {
+                                <a href="@Url.Action("Index", "Artist", new { country = country })"
+                                   class="btn btn-sm btn-white m-1">
+                                    @country
+                                </a>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row list media-circle">
+                        @foreach (var artist in Model.Artists)
+                        {
+                            <div class="col-6 col-sm-4 col-md-3 col-lg-3 py-3">
+                                <div class="list-item list-hover r mb-5">
+                                    <div class="media">
+                                        <a href="@Url.Action("Detail", "Artist", new { id = artist.ArtistId })"
+                                           class="ajax media-content"
+                                           style="background-image:url(@artist.ImageUrl)">
+                                        </a>
+                                    </div>
+                                    <div class="list-content text-center">
+                                        <div class="list-body">
+                                            <a href="@Url.Action("Detail", "Artist", new { id = artist.ArtistId })"
+                                               class="list-subtitle d-block text-muted h-1x subtitle ajax">
+                                                @artist.Name
+                                            </a>
+                                            <small class="text-muted">@artist.Country</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="d-flex py-3 justify-content-center">
+                        <ul class="pagination pagination-sm"></ul>
+                    </div>
+                </div>
+                <div style="min-width: 4rem"></div>
+                <div class="w-xl w-auto-sm no-shrink">
+                    <div class="sticky">
+                        <div class="list mb-5">
+                            <div class="list-item list-overlay r">
+                                <div class="media ">
+                                    <a href="item.detail.html#" class="ajax media-content " style="background-image:url(/Bebop/assets/img/b16.jpg)">
+                                    </a>
+                                    <div class="media-action ">
+                                    </div>
+                                </div>
+                                <div class="list-content p-5 text-center">
+                                    <div class="list-body ">
+                                        <a href="item.detail.html#" class="list-title title ajax h3 font-weight-bold">
+                                            Hip-Hop 100 Listesi
+                                        </a>
+                                        <a href="artist.detail.html#" class="list-subtitle d-block text-muted h-1x subtitle ajax ">
+                                            Şu anki en çılgın rap..
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h6 class="text text-muted sr-item">En Çok Dinlenenler</h6>
+                        <div class="row list-row">
+                            @foreach (var item in Model.TopTracks)
+                            {
+                                <div class="col-12" data-id="@item.SongId" data-category="@string.Join(", ", item.Genres)" data-tag="@item.ArtistName" data-source="@item.FileUrl">
+                                    <div class="list-item r">
+                                        <div class="media">
+                                            <a href="#" class="ajax media-content" style="background-image:url(@item.ImageUrl)">
+                                            </a>
+                                            <div class="media-action">
+                                                <button class="btn btn-icon no-bg no-shadow hide-row" data-toggle="class">
+                                                    <i data-feather="heart" class="active-fill"></i>
+                                                </button>
+
+                                                @* Kullanıcı seviyesi kontrolü *@
+                                                @if (userLevel >= item.Level)
+                                                {
+                                                    <button class="btn btn-raised btn-icon btn-rounded bg--white btn-play">
+                                                        <i data-feather="play"></i>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-icon btn-rounded bg--gray" disabled title="Seviyen yetersiz">
+                                                        <i data-feather="lock"></i>
+                                                    </button>
+                                                }
+
+
+                                                <button class="btn btn-icon no-bg no-shadow hide-row btn-more" data-toggle="dropdown">
+                                                    <i data-feather="more-horizontal"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="list-content text-center">
+                                            <div class="list-body">
+                                                <a href="#" class="list-title title ajax h-1x">@item.Title</a>
+                                                <a href="#" class="list-subtitle d-block text-muted h-1x subtitle ajax">
+                                                    @item.ArtistName
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

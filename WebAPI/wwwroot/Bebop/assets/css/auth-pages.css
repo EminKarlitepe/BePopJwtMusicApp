@@ -1,0 +1,97 @@
+﻿/* Auth Sayfaları Genel Stilleri */
+.bg-img {
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+#content-body {
+    background-color: #1a1a1f; /* Koyu tema ile uyumlu arka plan */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.auth-card-wrap {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/* Paket Seçim Alanı */
+.pkg-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.pkg-item {
+    flex: 1;
+    min-width: 100px;
+    cursor: pointer;
+    position: relative;
+}
+
+    .pkg-item input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+.pkg-card {
+    background: #232328;
+    border: 1px solid #333;
+    border-radius: 12px;
+    padding: 15px 10px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pkg-item input:checked + .pkg-card {
+    border-color: #448bff;
+    background: rgba(68, 139, 255, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+.pkg-name {
+    font-weight: 700;
+    display: block;
+    font-size: 0.9rem;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.pkg-price {
+    font-size: 0.75rem;
+    color: #a0a0a0;
+}
+
+/* Form Elemanları */
+.form-control {
+    background-color: #232328;
+    border: 1px solid #333;
+    color: #fff !important;
+    border-radius: 8px;
+    padding: 12px 15px;
+}
+
+    .form-control:focus {
+        background-color: #2a2a30;
+        border-color: #448bff;
+        box-shadow: none;
+    }
+
+.btn-primary {
+    padding: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    background: #448bff;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background: #3376e0;
+        transform: translateY(-1px);
+    }

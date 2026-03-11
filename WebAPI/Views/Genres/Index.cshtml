@@ -1,0 +1,145 @@
+@model BepopStreamProject.Models.ChartViewModel
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    var userLevel = User.GetUserLevel();
+    var userId = User.GetUserId();
+}
+<div>
+    <div class="page-content page-container" id="page-content">
+        <div class="padding sr" id="list" data-plugin="list">
+            <div class="pos-rlt">
+                @if (!string.IsNullOrEmpty(ViewBag.SearchQuery as string))
+                {
+                    <div class="py-4">
+                        <h4 class="text-white">"@ViewBag.SearchQuery" için arama sonuçları</h4>
+                    </div>
+                }
+                <div class="py-5">
+                    <div class="heading pt-5 pb-3 d-flex ">
+                        <div>
+                            <div class="text-muted sr-item"></div>
+                            <h5 class="text-highlight sr-item">Filtre</h5>
+                        </div>
+                        <span class="flex"></span>
+                    </div>
+                    <div class="py-2 d-flex sr-item" id="filter-tag">
+                        <div class="no-shrink my-2">Ülkeler</div>
+                        <div class="mx-3">
+                            <a href="@Url.Action("Index", "Genres", new { country = "All countries", genre = ViewBag.SelectedGenre })"
+                               class="btn btn-sm btn-white m-1 @(ViewBag.SelectedCountry == "All countries" ? "active" : "")">
+                                Tüm ülkeler
+                            </a>
+
+                            @foreach (var country in Model.Countries)
+                            {
+                                <a href="@Url.Action("Index", "Genres", new { country = country, genre = ViewBag.SelectedGenre })"
+                                   class="btn btn-sm btn-white m-1 @(ViewBag.SelectedCountry == country ? "active" : "")">
+                                    @country
+                                </a>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="py-2 d-flex sr-item" id="filter-category">
+                        <div class="no-shrink my-2">Türler</div>
+                        <div class="mx-3">
+                            <a href="@Url.Action("Index", "Genres", new { genre = "All genres", country = ViewBag.SelectedCountry })"
+                               class="btn btn-sm btn-white m-1 @(ViewBag.SelectedGenre == "All genres" ? "active" : "")">
+                                Tüm Türler
+                            </a>
+
+                            @foreach (var genre in Model.Genres)
+                            {
+                                <a href="@Url.Action("Index", "Genres", new { genre = genre, country = ViewBag.SelectedCountry })"
+                                   class="btn btn-sm btn-white m-1 @(ViewBag.SelectedGenre == genre ? "active" : "")">
+                                    @genre
+                                </a>
+                            }
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row row-lg list ">
+                    @if (Model.AllSongs == null || !Model.AllSongs.Any())
+                    {
+                        <div class="col-12">
+                            <div class="p-5 text-center text-muted">
+                                <h5>Hiçbir şarkı bulunamadı</h5>
+                                <p>Filtrelerinizi kontrol edin veya daha sonra tekrar deneyin.</p>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var song in Model.AllSongs)
+                        {
+                            var cover = string.IsNullOrEmpty(song.ImageUrl) ? Url.Content("~/Bebop/assets/img/default-cover.jpg") : song.ImageUrl;
+                            var detailsUrl = Url.Action("Details", "Songs", new { id = song.SongId });
+
+                            <div class="col-6 col-sm-4 col-md-3 col-lg-2"
+                                 data-id="@song.SongId"
+                                 data-category="@string.Join(", ", song.Genres)"
+                                 data-tag="@song.ArtistName"
+                                 data-source="@song.FileUrl"
+                                 data-title="@song.Title"
+                                 data-artist="@song.ArtistName"
+                                 data-cover="@cover">
+
+                                <div class="list-item list-hover r mb-5">
+                                    <div class="media">
+                                        <a href="@detailsUrl" class="ajax media-content" style="background-image:url('@cover')"></a>
+                                        <div class="media-action media-action-overlay">
+                                            <button class="btn btn-icon no-bg no-shadow hide-row" data-toggle="class">
+                                                <i data-feather="heart" class="active-fill"></i>
+                                            </button>
+
+                                            @if (userLevel >= song.Level)
+                                            {
+                                                <button class="btn btn-raised btn-icon btn-rounded bg--white btn-play">
+                                                    <i data-feather="play"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-icon btn-rounded bg--gray" disabled title="Seviyen yetersiz">
+                                                    <i data-feather="lock"></i>
+                                                </button>
+                                            }
+
+                                            <button class="btn btn-icon no-bg no-shadow hide-row btn-more" data-toggle="dropdown">
+                                                <i data-feather="more-horizontal"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-right"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="list-content text-center">
+                                        <div class="list-body">
+                                            <a href="@detailsUrl" class="list-title title ajax h-1x">@song.Title</a>
+                                            <a href="#" class="list-subtitle d-block text-muted h-1x subtitle ajax">
+                                                @song.ArtistName
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+                <div class="no-result hide">
+                    <div class="p-5 text-center">
+                        <h5>Hiçbir şey bulunamadı</h5>
+                        <small>Aradığınızı bulamıyoruz.</small>
+                    </div>
+                </div>
+                <div class="d-flex py-3 justify-content-center">
+                    <ul class="pagination pagination-sm"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

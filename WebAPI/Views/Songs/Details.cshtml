@@ -1,0 +1,228 @@
+@model BepopStreamProject.Models.SongDetailViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool canPlay = Model.UserLevel >= Model.Level;
+    string levelName = Model.Level switch { 1 => "Ücretsiz", 2 => "Gold", 3 => "Premium", _ => "Üye" };
+    string coverUrl = string.IsNullOrEmpty(Model.CoverImageUrl) ? "/Bebop/assets/img/b6.jpg" : Model.CoverImageUrl;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Bebop/assets/css/song-detail.css" asp-append-version="true" />
+}
+
+<div class="song-page">
+
+    <div class="song-hero fade-up">
+        <div class="song-hero-bg" style="background-image:url('@coverUrl')"></div>
+        <div class="song-hero-overlay"></div>
+        <div class="song-hero-content">
+
+            <div class="song-cover-wrap" id="coverWrap">
+                <div class="song-cover-spin"></div>
+                <div class="song-cover" style="background-image:url('@coverUrl')"></div>
+            </div>
+
+            <div class="song-meta">
+                <div class="song-type-badge">
+                    <svg width="7" height="7" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /></svg>
+                    Şarkı
+                </div>
+                <h1 class="song-title">@Model.Title</h1>
+                <div class="song-info-row">
+                    <a href="@Url.Action("Detail", "Artist", new { id = Model.ArtistId })" class="song-artist-link">@Model.ArtistName</a>
+                    @if (!string.IsNullOrEmpty(Model.AlbumTitle))
+                    {
+                        <span class="dot-sep">·</span>
+                        <a href="@Url.Action("Details", "Albums", new { id = Model.AlbumId })" class="song-album-link">@Model.AlbumTitle</a>
+                    }
+                    <span class="dot-sep">·</span>
+                    <span class="level-badge level-@Model.Level">@levelName</span>
+                </div>
+                <div class="song-stats">
+                    <div class="stat-item"><strong>@Model.PlayCount.ToString("N0")</strong> dinlenme</div>
+                    <div class="stat-item"><strong>@Model.CreatedAt.ToString("MMMM yyyy")</strong></div>
+                    @if (Model.Genres.Any())
+                    {
+                        <div class="stat-item"><strong>@string.Join(", ", Model.Genres)</strong></div>
+                    }
+                </div>
+
+                <div class="song-actions">
+                    @if (canPlay)
+                    {
+                        <button class="play-btn-large btn-play" id="mainPlayBtn"
+                                data-id="@Model.SongId"
+                                data-source="@Model.FileUrl"
+                                data-title="@Model.Title"
+                                data-artist="@Model.ArtistName"
+                                data-cover="@coverUrl"
+                                title="Çal">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21" /></svg>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="play-btn-large locked" title="Paket yükselt" disabled>
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                        </button>
+                    }
+                    <button class="action-btn" title="Beğen" id="favBtn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z" /></svg>
+                    </button>
+                    <button class="action-btn" title="Paylaş" onclick="shareSong('@Model.Title','@Model.ArtistName')">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></svg>
+                    </button>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <button class="action-btn btn-add-playlist" data-song-id="@Model.SongId" title="Çalma Listesine Ekle">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                        </button>
+                    }
+                </div>
+
+                @if (Model.Genres.Any())
+                {
+                    <div class="genre-tags">
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <a href="@Url.Action("Index", "Genres", new { genre = genre })" class="genre-tag">#@genre</a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @if (!canPlay)
+    {
+        <div class="lock-banner fade-up delay-1">
+            <div class="lock-icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+            </div>
+            <div class="lock-text">
+                <div class="lock-title">Bu şarkı @levelName üyeliği gerektiriyor</div>
+                <div class="lock-desc">Paketini yükselterek tüm şarkılara sınırsız erişim sağla.</div>
+            </div>
+            <a href="@Url.Action("Upgrade", "Membership")" class="upgrade-btn">Paketi Yükselt</a>
+        </div>
+    }
+
+    @if (Model.MoreByArtist.Any())
+    {
+        <div class="more-section fade-up delay-2">
+            <div class="section-header">
+                <div>
+                    <div class="section-label">Sanatçı</div>
+                    <div class="section-title">@Model.ArtistName'den Daha Fazlası</div>
+                </div>
+                <a href="@Url.Action("Detail", "Artist", new { id = Model.ArtistId })" class="see-all">Tümünü gör →</a>
+            </div>
+            <div class="more-grid">
+                @foreach (var s in Model.MoreByArtist)
+                {
+                    string sImg = string.IsNullOrEmpty(s.ImageUrl) ? "/Bebop/assets/img/b6.jpg" : s.ImageUrl;
+                    <a href="@Url.Action("Details", "Songs", new { id = s.SongId })" class="more-card">
+                        <div class="more-art">
+                            <div class="more-art-img" style="background-image:url('@sImg')"></div>
+                            <div class="more-overlay">
+                                @if (Model.UserLevel >= s.Level)
+                                {
+                                    <button class="mini-play btn-play"
+                                            data-id="@s.SongId"
+                                            data-source="@s.FileUrl"
+                                            data-title="@s.Title"
+                                            data-artist="@Model.ArtistName"
+                                            data-cover="@sImg">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21" /></svg>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="mini-play" style="background:rgba(30,30,40,0.9);color:#6b6b80;" disabled>
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                        <div class="more-title">@s.Title</div>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mainPlayBtn = document.getElementById('mainPlayBtn');
+            const coverWrap   = document.getElementById('coverWrap');
+            const favBtn      = document.getElementById('favBtn');
+
+            if (mainPlayBtn) {
+                mainPlayBtn.addEventListener('click', function () {
+                    coverWrap?.classList.toggle('playing');
+
+                    const title  = this.dataset.title;
+                    const artist = this.dataset.artist;
+                    const cover  = this.dataset.cover;
+
+                    const playerCover  = document.querySelector('.player-cover');
+                    const playerName   = document.querySelector('.player-track-name');
+                    const playerArtist = document.querySelector('.player-track-artist');
+                    const playerEl     = document.getElementById('bepop-player');
+
+                    if (playerCover)  playerCover.style.backgroundImage = `url('${cover}')`;
+                    if (playerName)   playerName.textContent  = title;
+                    if (playerArtist) playerArtist.textContent = artist;
+                    if (playerEl)     playerEl.classList.remove('hidden');
+                });
+            }
+
+            if (favBtn) {
+                favBtn.addEventListener('click', function () {
+                    this.classList.toggle('active');
+                    const svg = this.querySelector('svg');
+                    if (this.classList.contains('active')) {
+                        svg.setAttribute('fill', '#fa5c7b');
+                        svg.setAttribute('stroke', '#fa5c7b');
+                    } else {
+                        svg.setAttribute('fill', 'none');
+                        svg.setAttribute('stroke', 'currentColor');
+                    }
+                });
+            }
+
+            document.querySelectorAll('.mini-play.btn-play').forEach(function (btn) {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const title  = this.dataset.title;
+                    const artist = this.dataset.artist;
+                    const cover  = this.dataset.cover;
+
+                    const playerCover  = document.querySelector('.player-cover');
+                    const playerName   = document.querySelector('.player-track-name');
+                    const playerArtist = document.querySelector('.player-track-artist');
+                    const playerEl     = document.getElementById('bepop-player');
+
+                    if (playerCover)  playerCover.style.backgroundImage = `url('${cover}')`;
+                    if (playerName)   playerName.textContent  = title;
+                    if (playerArtist) playerArtist.textContent = artist;
+                    if (playerEl)     playerEl.classList.remove('hidden');
+                });
+            });
+        });
+
+        function shareSong(title, artist) {
+            if (navigator.share) {
+                navigator.share({ title: title + ' - ' + artist, url: window.location.href }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                Swal.fire({ toast: true, position: 'bottom-end', icon: 'success', title: 'Link kopyalandı!', showConfirmButton: false, timer: 2000 });
+            }
+        }
+    </script>
+}

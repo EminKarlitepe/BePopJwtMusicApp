@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Core\BePopJwt.Core.csproj" />
+		<ProjectReference Include="..\DataAccess\BePopJwt.DataAccess.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		<PackageReference Include="FluentValidation" Version="11.11.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
+	</ItemGroup>
+
+</Project>

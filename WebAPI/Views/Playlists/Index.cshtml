@@ -1,0 +1,51 @@
+@model IEnumerable<Core.Entities.Playlist>
+@{
+    ViewData["Title"] = "Listelerim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-content page-container" id="page-content">
+    <div class="padding sr">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="text-white mb-0">Listelerim</h3>
+            <a href="@Url.Action("Create")" class="btn btn-primary btn-sm">Yeni Liste Oluştur</a>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="card bg-dark text-white">
+                <div class="card-body text-center py-5">
+                    <h5>Henüz hiç çalma listen yok</h5>
+                    <p class="text-muted mb-3">Beğendiğin şarkıları gruplayarak kendi listelerini oluşturabilirsin.</p>
+                    <a href="@Url.Action("Create")" class="btn btn-primary btn-sm">İlk listeyi oluştur</a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var p in Model)
+                {
+                    var songCount = p.PlaylistSongs?.Count() ?? 0;
+                    <div class="col-6 col-md-4 col-lg-3 mb-4">
+                        <a href="@Url.Action("Details", new { id = p.PlaylistId })" class="text-decoration-none">
+                            <div class="list-item list-hover r bg-dark text-white p-3 h-100">
+                                <div class="mb-3">
+                                    <div class="media">
+                                        <div class="media-content r" style="background-image:url('@Url.Content("~/Bebop/assets/img/b9.jpg")');height:140px;"></div>
+                                    </div>
+                                </div>
+                                <div class="list-body">
+                                    <div class="list-title h-1x mb-1">@p.Name</div>
+                                    <div class="text-muted small">
+                                        @songCount şarkı · @p.CreatedAt.ToString("dd.MM.yyyy")
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

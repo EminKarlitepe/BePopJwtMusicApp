@@ -1,0 +1,99 @@
+@model Core.Entities.Playlist
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="page-content page-container" id="page-content">
+    <div class="padding sr">
+        <div class="page-hero page-container mb-4">
+            <div class="media bg-media">
+                <div class="media-content" style="background-image:url('@Url.Content("~/Bebop/assets/img/b8.jpg")')"></div>
+            </div>
+            <div class="p-4 d-flex align-items-end">
+                <div>
+                    <h1 class="display-4 font-weight-bold text-white mb-1">@Model.Name</h1>
+                    <div class="text-muted">
+                        @Model.PlaylistSongs?.Count() ?? 0 şarkı ·
+                        Oluşturulma: @Model.CreatedAt.ToString("dd.MM.yyyy")
+                    </div>
+                </div>
+                <span class="flex"></span>
+                <form asp-action="Delete" asp-controller="Playlists" method="post"
+                      onsubmit="return confirm('Bu listeyi silmek istediğinize emin misiniz?')">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.PlaylistId" />
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        Listeyi Sil
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card bg-dark text-white">
+            <div class="card-body">
+                @if (Model.PlaylistSongs == null || !Model.PlaylistSongs.Any())
+                {
+                    <div class="text-center text-muted py-5">
+                        <h5>Bu listede henüz şarkı yok</h5>
+                        <p>Şarkı kartlarındaki “daha fazla” menüsünden bu listeye şarkı ekleyebilirsin.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Kapak</th>
+                                    <th>Şarkı</th>
+                                    <th>Sanatçı</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var index = 1;
+                                }
+                                @foreach (var ps in Model.PlaylistSongs)
+                                {
+                                    var song = ps.Song;
+                                    if (song == null) { continue; }
+                                    var cover = song.Album?.CoverImageUrl ?? "/Bebop/assets/img/default-cover.jpg";
+                                    <tr data-id="@song.SongId" data-source="@song.FileUrl" data-title="@song.Title"
+                                        data-artist="@song.Artist?.Name" data-cover="@cover">
+                                        <td>@index</td>
+                                        <td>
+                                            <div class="media">
+                                                <a href="@Url.Action("Details", "Songs", new { id = song.SongId })"
+                                                   class="ajax media-content r" style="width:50px;height:50px;background-image:url('@cover')"></a>
+                                            </div>
+                                        </td>
+                                        <td>@song.Title</td>
+                                        <td>@song.Artist?.Name</td>
+                                        <td class="text-right">
+                                            <button class="btn btn-sm btn-outline-light btn-play">
+                                                Çal
+                                            </button>
+                                            <form asp-action="RemoveSong" asp-controller="Playlists" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="playlistId" value="@Model.PlaylistId" />
+                                                <input type="hidden" name="songId" value="@song.SongId" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    Kaldır
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    index++;
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

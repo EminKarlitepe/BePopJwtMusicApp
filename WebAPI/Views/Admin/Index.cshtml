@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    ViewData["Active"] = "Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<div class="row">
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>@(ViewBag.UserCount ?? 0)</h3>
+                <p>Kullanıcılar</p>
+            </div>
+            <div class="icon"><i class="fas fa-users"></i></div>
+            <a href="/Admin/Users" class="small-box-footer">Detay <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>@(ViewBag.SongCount ?? 0)</h3>
+                <p>Şarkılar</p>
+            </div>
+            <div class="icon"><i class="fas fa-music"></i></div>
+            <a href="/Admin/Songs" class="small-box-footer">Detay <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>@(ViewBag.ArtistCount ?? 0)</h3>
+                <p>Sanatçılar</p>
+            </div>
+            <div class="icon"><i class="fas fa-microphone"></i></div>
+            <a href="/Admin/Artists" class="small-box-footer">Detay <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>@(ViewBag.AlbumCount ?? 0)</h3>
+                <p>Albümler</p>
+            </div>
+            <div class="icon"><i class="fas fa-compact-disc"></i></div>
+            <a href="/Admin/Albums" class="small-box-footer">Detay <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-secondary">
+            <div class="inner">
+                <h3>@(ViewBag.GenreCount ?? 0)</h3>
+                <p>Türler</p>
+            </div>
+            <div class="icon"><i class="fas fa-tag"></i></div>
+            <a href="/Admin/Genres" class="small-box-footer">Yönet <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
+            <div class="inner">
+                <h3>@(ViewBag.ProductCount ?? 0)</h3>
+                <p>Ürünler</p>
+            </div>
+            <div class="icon"><i class="fas fa-box"></i></div>
+            <a href="/Admin/Products" class="small-box-footer">Yönet <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+}

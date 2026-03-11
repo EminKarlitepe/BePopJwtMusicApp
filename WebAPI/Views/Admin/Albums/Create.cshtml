@@ -1,0 +1,49 @@
+﻿@model Core.Entities.Album
+@{
+    ViewData["Title"] = "Yeni Albüm Ekle";
+    ViewData["Active"] = "Albums";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card card-primary" style="max-width:700px;">
+    <div class="card-header">
+        <h3 class="card-title">Albüm Bilgileri</h3>
+    </div>
+    <form asp-action="CreateAlbum" method="post">
+        <div class="card-body">
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Error</div>
+            }
+            <div class="form-group">
+                <label>Albüm Adı *</label>
+                <input asp-for="Title" class="form-control" placeholder="Albüm adını girin" />
+            </div>
+            <div class="form-group position-relative">
+                <label>Sanatçı *</label>
+                <input type="text" id="artistSearch" name="artistName" class="form-control" placeholder="Sanatçı adı yazın" autocomplete="off" />
+                <input asp-for="ArtistId" type="hidden" id="ArtistId" />
+
+                <div id="artistResults" class="list-group position-absolute" style="z-index:1050; width:100%; display:none; max-height:220px; overflow:auto;
+                    box-shadow:0 2px 6px rgba(0,0,0,.15);">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Kapak Resmi URL</label>
+                <input asp-for="CoverImageUrl" class="form-control" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+                <label>Çıkış Tarihi</label>
+                <input asp-for="ReleaseDate" type="date" class="form-control" />
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Kaydet
+            </button>
+            <a href="/Admin/Albums" class="btn btn-secondary ml-2">
+                <i class="fas fa-times"></i> İptal
+            </a>
+        </div>
+    </form>
+</div>

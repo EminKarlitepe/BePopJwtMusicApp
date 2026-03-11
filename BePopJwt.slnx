@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Business/BePopJwt.Business.csproj" />
+  <Project Path="Core/BePopJwt.Core.csproj" />
+  <Project Path="DataAccess/BePopJwt.DataAccess.csproj" />
+  <Project Path="WebAPI/BepopJwt.Api.csproj" DisplayName="BePopJwt.Api" />
+</Solution>

@@ -1,0 +1,144 @@
+@using BepopStreamProject.Models
+@model BepopStreamProject.Models.DiscoverViewModel
+@{
+    ViewData["Title"] = "Keşfet";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var userLevel = User.GetUserLevel();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Bebop/assets/css/discover-custom.css" asp-append-version="true" />
+}
+
+<div class="bepop-page" data-user-level="@userLevel">
+    <div class="hero fade-up">
+        <div class="hero-bg" id="heroBg"></div>
+        <div class="hero-gradient"></div>
+        <div class="hero-noise"></div>
+        <div class="hero-content">
+            <div class="hero-eyebrow">Şimdi Çalıyor</div>
+            <h1 class="hero-title" id="heroTitle">Müziğin <span>Büyüsüne Kapıl</span></h1>
+            <p class="hero-desc" id="heroDesc">Ruhunu harekete geçiren harika şarkılara dal.</p>
+            <div class="hero-actions">
+                <a href="@Url.Action("Index", "Genres")" class="btn-primary-accent">Keşfet</a>
+            </div>
+        </div>
+        <div class="hero-nav">
+            <div class="hero-dot active" onclick="changeSlide(0)"></div>
+            <div class="hero-dot" onclick="changeSlide(1)"></div>
+            <div class="hero-dot" onclick="changeSlide(2)"></div>
+        </div>
+    </div>
+
+    <div class="bepop-section fade-up">
+        <div class="section-header">
+            <div>
+                <div class="section-label">Haftalık</div>
+                <div class="section-title">En Çok Dinlenenler</div>
+            </div>
+        </div>
+        <div class="tracks-scroll">
+            @for (int i = 0; i < Model.TopTracks.Count; i++)
+            {
+                var item = Model.TopTracks[i];
+                var cover = string.IsNullOrEmpty(item.ImageUrl) ? Url.Content("~/Bebop/assets/img/default-cover.jpg") : item.ImageUrl;
+                <div class="track-card" data-id="@item.SongId" data-level="@item.Level" data-source="@item.FileUrl" data-title="@item.Title" data-artist="@item.ArtistName" data-cover="@cover">
+                    <div class="track-art">
+                        <div class="track-art-img" style="background-image:url('@cover')"></div>
+                        <span class="track-rank">#@(i + 1)</span>
+                        <div class="track-overlay">
+                            @if (userLevel >= item.Level)
+                            {
+                                <button class="track-play-btn btn-play"><i data-feather="play"></i></button>
+                            }
+                            else
+                            {
+                                <button class="track-play-btn locked" disabled><i data-feather="lock"></i></button>
+                            }
+                        </div>
+                    </div>
+                    <div class="track-name">@item.Title</div>
+                    <div class="track-artist">
+                        @item.ArtistName
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <button class="btn-add-playlist ml-2" data-song-id="@item.SongId" title="Listeye Ekle">+</button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (Model.RecommendedSongs != null && Model.RecommendedSongs.Any())
+    {
+        <div class="bepop-section fade-up">
+            <div class="section-header">
+                <div>
+                    <div class="section-label">Yapay Zeka Önerisi</div>
+                    <div class="section-title">Sana Özel</div>
+                </div>
+            </div>
+            <div class="tracks-scroll">
+                @foreach (var item in Model.RecommendedSongs)
+                {
+                    var cover = string.IsNullOrEmpty(item.ImageUrl) ? Url.Content("~/Bebop/assets/img/default-cover.jpg") : item.ImageUrl;
+                    <div class="track-card" data-id="@item.SongId" data-level="@item.Level" data-source="@item.FileUrl" data-title="@item.Title" data-artist="@item.ArtistName" data-cover="@cover">
+                        <div class="track-art">
+                            <div class="track-art-img" style="background-image:url('@cover')"></div>
+                            <div class="track-overlay">
+                                @if (userLevel >= item.Level)
+                                {
+                                    <button class="track-play-btn btn-play"><i data-feather="play"></i></button>
+                                }
+                                else
+                                {
+                                    <button class="track-play-btn locked" disabled><i data-feather="lock"></i></button>
+                                }
+                            </div>
+                        </div>
+                        <div class="track-name">@item.Title</div>
+                        <div class="track-artist">@item.ArtistName</div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="bottom-grid">
+        <div>
+            <div class="section-title mb-4">Yeni Parçalar</div>
+            @foreach (var song in Model.RecentlyAdded)
+            {
+                var cover = string.IsNullOrEmpty(song.ImageUrl) ? Url.Content("~/Bebop/assets/img/default-cover.jpg") : song.ImageUrl;
+                <div class="song-list-item" data-id="@song.SongId" data-source="@song.FileUrl" data-title="@song.Title" data-artist="@song.ArtistName" data-cover="@cover">
+                    <div class="song-list-art" style="background-image:url('@cover')"></div>
+                    <div class="song-list-info">
+                        <div class="song-list-title">@song.Title</div>
+                        <div class="song-list-artist">@song.ArtistName</div>
+                    </div>
+                    <button class="icon-btn btn-play"><i data-feather="play"></i></button>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <button class="btn-add-playlist" data-song-id="@song.SongId" title="Listeye Ekle">+</button>
+                    }
+                </div>
+            }
+        </div>
+
+        <div>
+            <div class="section-title mb-4">Etkinlikler</div>
+            <div class="event-card">
+                <div class="event-color-bar"></div>
+                <div class="event-body">
+                    <div class="event-date">Mayıs 11 · 10:00</div>
+                    <div class="event-title">Bahar Festivali</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Bebop/assets/js/discover-logic.js" asp-append-version="true"></script>
+}

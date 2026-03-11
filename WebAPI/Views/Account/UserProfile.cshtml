@@ -1,0 +1,89 @@
+﻿@model Core.Entities.User
+@{
+    ViewData["Title"] = (Model.DisplayName ?? Model.Username) + " | Profil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var followingArtists = ViewBag.FollowingArtists as List<Core.Entities.Artist> ?? new();
+    int followersCount = ViewBag.FollowersCount ?? 0;
+    int followingUsersCount = ViewBag.FollowingUsersCount ?? 0;
+    bool isFollowing = ViewBag.IsFollowing ?? false;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Bebop/assets/css/profile.css" asp-append-version="true" />
+}
+
+<div class="page-content page-container" id="page-content">
+    <div class="padding sr">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+
+                <div class="profile-card p-4 text-center mb-3">
+                    <img src="@(string.IsNullOrEmpty(Model.ProfileImageUrl) ? Url.Content("~/Bebop/assets/img/default-avatar.png") : Model.ProfileImageUrl)"
+                         class="profile-avatar mb-3" />
+                    <h5 class="mb-0 text-white">@(Model.DisplayName ?? Model.Username)</h5>
+                    <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:4px;">@@@Model.Username</div>
+                    @if (!string.IsNullOrEmpty(Model.Country))
+                    {
+                        <div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:12px;">📍 @Model.Country</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Bio))
+                    {
+                        <div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:16px;line-height:1.5;">@Model.Bio</div>
+                    }
+
+                    <div class="d-flex justify-content-around mb-4">
+                        <a href="@Url.Action("Followers", "Account", new { id = Model.UserId })" class="stat-link">
+                            <div class="h5 mb-0">@followersCount</div>
+                            <small>Takipçi</small>
+                        </a>
+                        <a href="@Url.Action("Following", "Account", new { id = Model.UserId })" class="stat-link">
+                            <div class="h5 mb-0">@followingUsersCount</div>
+                            <small>Takip</small>
+                        </a>
+                        <div class="stat-link" style="cursor:default;">
+                            <div class="h5 mb-0">@followingArtists.Count</div>
+                            <small>Sanatçı</small>
+                        </div>
+                    </div>
+
+                    <form asp-action="ToggleUserFollow" asp-controller="Account" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="targetId" value="@Model.UserId" />
+                        @if (isFollowing)
+                        {
+                            <button type="submit" class="btn-unfollow-user">Takibi Bırak</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn-follow-user">Takip Et</button>
+                        }
+                    </form>
+                </div>
+
+                @if (followingArtists.Any())
+                {
+                    <div class="profile-card p-3">
+                        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin-bottom:10px;">Takip Ettiği Sanatçılar</div>
+                        @foreach (var artist in followingArtists)
+                        {
+                            <div class="artist-follow-item">
+                                <a href="@Url.Action("Detail", "Artist", new { id = artist.ArtistId })"
+                                       class="artist-follow-avatar"
+                                       style="background-image:url('@(string.IsNullOrEmpty(artist.ProfileImageUrl) ? Url.Content("~/Bebop/assets/img/b6.jpg") : artist.ProfileImageUrl)')">
+                                </a>
+                                <div style="min-width:0;">
+                                    <a href="@Url.Action("Detail", "Artist", new { id = artist.ArtistId })" class="artist-follow-name">@artist.Name</a>
+                                    @if (!string.IsNullOrEmpty(artist.Country))
+                                    {
+                                        <span class="artist-follow-country">@artist.Country</span>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>

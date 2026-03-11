@@ -1,0 +1,152 @@
+@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] | Bepop - Music Web Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <link rel="stylesheet" href="~/Bebop/libs/slick-carousel/slick/slick.css" />
+    <link rel="stylesheet" href="~/Bebop/libs/slick-carousel/slick/slick-theme.css" />
+    <link rel="stylesheet" href="~/Bebop/assets/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/Bebop/assets/css/theme.css" />
+    <link rel="stylesheet" href="~/Bebop/assets/css/style.css" />
+    <link rel="stylesheet" href="~/Bebop/assets/css/player-layout.css" />
+    <link rel="stylesheet" href="~/Bebop/assets/css/playlist-modal.css" />
+    @RenderSection("Styles", required: false)
+</head>
+<body class="layout-column bg-dark">
+
+    <header id="header" class="page-header">
+        <div class="navbar navbar-expand-lg">
+            <a href="@Url.Action("Index", "Home")" class="navbar-brand text-white">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.2" fill="#000"></circle><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.2"></circle></svg>
+                <span class="d-inline ml-2">Bepop</span>
+            </a>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a href="@Url.Action("Index", "Discover")" class="nav-link">Keşfet</a></li>
+                    <li class="nav-item"><a href="@Url.Action("Index", "Artist")" class="nav-link">Sanatçılar</a></li>
+                    <li class="nav-item"><a href="@Url.Action("Index", "Genres")" class="nav-link">Türler</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="listsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Listeler</a>
+                        <div class="dropdown-menu" aria-labelledby="listsDropdown">
+                            <a class="dropdown-item" href="@Url.Action("Index", "Chart")">Top Listeler</a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "Playlists")">Listelerim</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="@Url.Action("Create", "Playlists")">Yeni Liste Oluştur</a>
+                        </div>
+                    </li>
+                </ul>
+
+                <form class="form-inline ml-auto mr-3" method="get" action="@Url.Action("Index", "Discover")">
+                    <div class="input-group">
+                        <input type="search" name="q" class="form-control" placeholder="Şarkı, sanatçı ara..." aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn" type="submit" style="color:rgba(255,255,255,0.6);background:transparent;border:none;"><i data-feather="search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <ul class="nav navbar-menu">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item d-none d-sm-block">
+                        <span class="nav-link">Hoş geldin, @User.Identity.Name</span>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i data-feather="user"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                            <a class="dropdown-item" href="@Url.Action("Profile", "Account")">Profil</a>
+                            <a class="dropdown-item" href="@Url.Action("Index", "Playlists")">Listelerim</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="@Url.Action("Logout", "Auth")">Çıkış Yap</a>
+                        </div>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item"><a href="/Auth/Login" class="btn btn-sm btn-outline-primary mr-2">Giriş</a></li>
+                }
+            </ul>
+        </div>
+    </header>
+
+    <div id="main" class="layout-row flex">
+        <div id="content" class="flex">@RenderBody()</div>
+    </div>
+
+    <div id="bepop-player" class="hidden">
+        <div class="player-info">
+            <div class="player-cover" id="playerCover"></div>
+            <div style="min-width:0">
+                <div class="player-track-name" id="playerTitle">—</div>
+                <div class="player-track-artist" id="playerArtist">—</div>
+            </div>
+            <button class="player-heart" id="playerHeart"><i data-feather="heart"></i></button>
+        </div>
+        <div class="player-controls">
+            <div class="player-buttons">
+                <button class="ctrl-btn" id="btnPrev"><i data-feather="skip-back"></i></button>
+                <button class="ctrl-btn play-pause" id="btnPlayPause">
+                    <i id="iconPlay" data-feather="play"></i>
+                    <i id="iconPause" data-feather="pause" style="display:none"></i>
+                </button>
+                <button class="ctrl-btn" id="btnNext"><i data-feather="skip-forward"></i></button>
+            </div>
+            <div class="player-progress">
+                <span class="player-time" id="currentTime">0:00</span>
+                <div class="progress-bar-wrap" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+                <span class="player-time right" id="totalTime">0:00</span>
+            </div>
+        </div>
+        <div class="player-volume">
+            <button class="volume-btn" id="btnMute"><i data-feather="volume-2"></i></button>
+            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80" />
+        </div>
+    </div>
+
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <div id="playlistModal" class="pl-modal-overlay" style="display:none;">
+            <div class="pl-modal-box">
+                <div class="pl-modal-header">
+                    <span class="pl-modal-title">Çalma Listesine Ekle</span>
+                    <button class="pl-modal-close" id="plModalClose" type="button">&#215;</button>
+                </div>
+                <div class="pl-modal-body">
+                    <div id="plModalLoading" class="pl-modal-loading">Listeler yükleniyor...</div>
+                    <div id="plModalList" style="display:none;"></div>
+                    <div id="plModalEmpty" class="pl-modal-empty" style="display:none;">Henüz çalma listen yok.</div>
+                </div>
+                <div class="pl-modal-footer">
+                    <a href="@Url.Action("Create", "Playlists")" class="pl-modal-new-btn">+ Yeni Liste Oluştur</a>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div id="yt-player-container">
+        <div><button type="button" id="yt-player-close">×</button><iframe id="yt-player-iframe" src=""></iframe></div>
+    </div>
+
+    <script src="~/Bebop/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/Bebop/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="~/Bebop/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/Bebop/libs/pjax/pjax.min.js"></script>
+    <script src="~/Bebop/assets/js/ajax.js"></script>
+    <script src="~/Bebop/assets/js/lazyload.config.js"></script>
+    <script src="~/Bebop/assets/js/lazyload.js"></script>
+    <script src="~/Bebop/assets/js/plugin.js"></script>
+    <script src="~/Bebop/libs/scrollreveal/dist/scrollreveal.min.js"></script>
+    <script src="~/Bebop/libs/slick-carousel/slick/slick.min.js"></script>
+    <script src="~/Bebop/libs/feather-icons/dist/feather.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/Bebop/assets/js/theme.js"></script>
+    <script src="~/Bebop/assets/js/player-logic.js"></script>
+    <script src="~/Bebop/assets/js/playlist-modal.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

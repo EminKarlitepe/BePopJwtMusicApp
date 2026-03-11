@@ -1,0 +1,346 @@
+﻿/* ── Ortak kart ── */
+.profile-card {
+    background: #1a1a1a;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.07);
+}
+
+.profile-avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255,255,255,0.15);
+}
+
+/* ── Stat butonları (kendi profil) ── */
+.stat-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: center;
+    color: inherit;
+    transition: opacity .15s;
+    text-decoration: none;
+    display: block;
+}
+
+    .stat-btn:hover {
+        opacity: .7;
+    }
+
+    .stat-btn .h5 {
+        color: #fff;
+        margin-bottom: 2px;
+    }
+
+    .stat-btn small {
+        color: rgba(255,255,255,.45);
+        font-size: 11px;
+    }
+
+/* ── Stat linkleri (başkasının profili) ── */
+.stat-link {
+    color: inherit;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    transition: opacity .15s;
+}
+
+    .stat-link:hover {
+        opacity: .7;
+        color: #c8f04a;
+    }
+
+    .stat-link .h5 {
+        color: #fff;
+        margin-bottom: 2px;
+    }
+
+    .stat-link small {
+        color: rgba(255,255,255,.45);
+        font-size: 11px;
+    }
+
+/* ── Takip butonları ── */
+.btn-follow-user {
+    background: #c8f04a;
+    color: #000;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .15s;
+}
+
+    .btn-follow-user:hover {
+        opacity: .85;
+    }
+
+.btn-unfollow-user {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 20px;
+    padding: 8px 24px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+}
+
+    .btn-unfollow-user:hover {
+        border-color: #e55;
+        color: #e55;
+    }
+
+/* ── Sanatçı listesi ── */
+.artist-follow-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+    .artist-follow-item:last-child {
+        border-bottom: none;
+    }
+
+.artist-follow-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-color: #2a2a2a;
+    flex-shrink: 0;
+    display: block;
+}
+
+.artist-follow-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    line-height: 1.3;
+}
+
+    .artist-follow-name:hover {
+        color: #c8f04a;
+    }
+
+.artist-follow-country {
+    font-size: 11px;
+    color: rgba(255,255,255,.4);
+}
+
+/* ── Kullanıcı arama ── */
+.user-search-wrap {
+    position: relative;
+}
+
+.user-search-input {
+    background: #111;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px;
+    color: #fff;
+    padding: 10px 14px;
+    width: 100%;
+    font-size: 14px;
+}
+
+    .user-search-input:focus {
+        outline: none;
+        border-color: rgba(200,240,74,.4);
+    }
+
+.user-search-results {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #1e1e1e;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 10px;
+    z-index: 999;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+
+.user-search-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: #fff;
+    transition: background .15s;
+}
+
+    .user-search-item:hover {
+        background: rgba(255,255,255,.06);
+    }
+
+.user-search-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-color: #2a2a2a;
+    flex-shrink: 0;
+}
+
+.user-search-name {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.user-search-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,.4);
+}
+
+.user-search-empty {
+    padding: 14px;
+    text-align: center;
+    color: rgba(255,255,255,.35);
+    font-size: 13px;
+}
+
+/* ── Follow listesi sayfası ── */
+.follow-list-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 32px 16px;
+}
+
+.follow-list-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.follow-list-back {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,.5);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    display: flex;
+    text-decoration: none;
+}
+
+    .follow-list-back:hover {
+        background: rgba(255,255,255,.07);
+        color: #fff;
+    }
+
+.follow-list-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.follow-list-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,.4);
+}
+
+.follow-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    transition: background .15s;
+}
+
+    .follow-item:hover {
+        background: rgba(255,255,255,.05);
+    }
+
+.follow-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-color: #2a2a2a;
+    flex-shrink: 0;
+    text-decoration: none;
+    display: block;
+}
+
+.follow-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.follow-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    display: block;
+}
+
+    .follow-name:hover {
+        color: #c8f04a;
+    }
+
+.follow-username {
+    font-size: 12px;
+    color: rgba(255,255,255,.4);
+}
+
+.btn-follow-sm {
+    background: #c8f04a;
+    color: #000;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity .15s;
+}
+
+    .btn-follow-sm:hover {
+        opacity: .85;
+    }
+
+.btn-unfollow-sm {
+    background: transparent;
+    color: rgba(255,255,255,.6);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s;
+}
+
+    .btn-unfollow-sm:hover {
+        border-color: #e55;
+        color: #e55;
+    }
+
+.empty-state {
+    text-align: center;
+    padding: 48px 0;
+    color: rgba(255,255,255,.3);
+    font-size: 14px;
+}

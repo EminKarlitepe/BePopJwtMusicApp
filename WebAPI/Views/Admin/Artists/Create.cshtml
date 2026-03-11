@@ -1,0 +1,44 @@
+﻿@model Core.Entities.Artist
+@{
+    ViewData["Title"] = "Yeni Sanatçı Ekle";
+    ViewData["Active"] = "Artists";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card card-primary" style="max-width:700px;">
+    <div class="card-header">
+        <h3 class="card-title">Sanatçı Bilgileri</h3>
+    </div>
+    <form asp-action="CreateArtist" method="post">
+        <div class="card-body">
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Error</div>
+            }
+            <div class="form-group">
+                <label>Sanatçı Adı *</label>
+                <input asp-for="Name" class="form-control" placeholder="Sanatçı adını girin" />
+            </div>
+            <div class="form-group">
+                <label>Ülke</label>
+                <input asp-for="Country" class="form-control" placeholder="Örn: Türkiye" />
+            </div>
+            <div class="form-group">
+                <label>Profil Fotoğrafı URL</label>
+                <input asp-for="ProfileImageUrl" class="form-control" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Sanatçı hakkında bilgi girin"></textarea>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Kaydet
+            </button>
+            <a href="/Admin/Artists" class="btn btn-secondary ml-2">
+                <i class="fas fa-times"></i> İptal
+            </a>
+        </div>
+    </form>
+</div>

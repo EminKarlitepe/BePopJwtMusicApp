@@ -1,0 +1,76 @@
+﻿@model List<BepopStreamProject.Controllers.UserListItemVm>
+@{
+    var targetUser = ViewBag.TargetUser as Core.Entities.User;
+    string listType = ViewBag.ListType ?? "followers";
+    int myId = ViewBag.MyId ?? 0;
+    bool isFollowers = listType == "followers";
+    ViewData["Title"] = isFollowers ? "Takipçiler" : "Takip Edilenler";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string backUrl = targetUser?.UserId == myId
+        ? Url.Action("Profile", "Account")!
+        : Url.Action("UserProfile", "Account", new { id = targetUser?.UserId })!;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Bebop/assets/css/profile.css" asp-append-version="true" />
+}
+
+<div class="page-content page-container" id="page-content">
+    <div class="follow-list-wrap">
+
+        <div class="follow-list-header">
+            <a href="@backUrl" class="follow-list-back">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6" /></svg>
+            </a>
+            <div>
+                <div class="follow-list-title">@(isFollowers ? "Takipçiler" : "Takip Edilenler")</div>
+                @if (targetUser != null)
+                {
+                    <div class="follow-list-sub">@(targetUser.DisplayName ?? targetUser.Username)</div>
+                }
+            </div>
+        </div>
+
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                @(isFollowers ? "Henüz takipçi yok." : "Henüz kimse takip edilmiyor.")
+            </div>
+        }
+        else
+        {
+            @foreach (var u in Model)
+            {
+                string avatarStyle = string.IsNullOrEmpty(u.ProfileImageUrl)
+                    ? "background-color:#2a2a2a"
+                    : $"background-image:url('{u.ProfileImageUrl}')";
+
+                <div class="follow-item">
+                    <a href="@(u.IsMe? Url.Action("Profile", "Account") : Url.Action("UserProfile", "Account", new { id = u.UserId }))"
+                       class="follow-avatar" style="@avatarStyle"></a>
+                    <div class="follow-info">
+                        <a href="@(u.IsMe? Url.Action("Profile", "Account") : Url.Action("UserProfile", "Account", new { id = u.UserId }))"
+                           class="follow-name">@u.DisplayName</a>
+                        <span class="follow-username">@@@u.Username @(!string.IsNullOrEmpty(u.Country) ? "· " + u.Country : "")</span>
+                    </div>
+                    @if (!u.IsMe)
+                    {
+                        <form asp-action="ToggleUserFollow" asp-controller="Account" method="post" style="margin:0;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="targetId" value="@u.UserId" />
+                            @if (u.IsFollowingBack)
+                            {
+                                <button type="submit" class="btn-unfollow-sm">Takipten Çık</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn-follow-sm">Takip Et</button>
+                            }
+                        </form>
+                    }
+                </div>
+            }
+        }
+
+    </div>
+</div>

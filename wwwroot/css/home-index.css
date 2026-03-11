@@ -1,0 +1,8 @@
+/* Styles moved from Views/Home/Index.cshtml to public CSS file */
+.song-art { width: 160px; height: 160px; object-fit: cover; border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,0.6); }
+.player-controls { display: flex; gap: 0.5rem; align-items: center; }
+.player-btn { background: rgba(255,255,255,0.06); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.player-btn:hover { background: rgba(255,255,255,0.12); transform: scale(1.05); }
+.spotify-btn { background: #1DB954; color: #fff; }
+.action-square { background: rgba(255,255,255,0.06); border: none; color: #fff; width: 34px; height: 34px; display:inline-flex; align-items:center; justify-content:center; border-radius:6px; }
+.action-square:hover { background: rgba(255,255,255,0.12); }

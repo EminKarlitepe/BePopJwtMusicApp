@@ -1,0 +1,83 @@
+﻿@model Core.Entities.Song
+@{
+    ViewData["Title"] = "Yeni Şarkı Ekle";
+    ViewData["Active"] = "Songs";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card card-primary" style="max-width:700px;">
+    <div class="card-header">
+        <h3 class="card-title">Şarkı Bilgileri</h3>
+    </div>
+    <form asp-action="CreateSong" method="post">
+        <div class="card-body">
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Error</div>
+            }
+            <div class="form-group">
+                <label>Şarkı Adı *</label>
+                <input asp-for="Title" class="form-control" placeholder="Şarkı adını girin" />
+            </div>
+            <div class="form-group">
+                <label>Sanatçı *</label>
+                <select asp-for="ArtistId" class="form-control">
+                    <option value="">-- Sanatçı Seç --</option>
+                    @foreach (var artist in ViewBag.Artists as List<Core.Entities.Artist>)
+                    {
+                        <option value="@artist.ArtistId">@artist.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Albüm</label>
+                <select asp-for="AlbumId" class="form-control">
+                    <option value="">-- Albüm Seç (Opsiyonel) --</option>
+                    @foreach (var album in ViewBag.Albums as List<Core.Entities.Album>)
+                    {
+                        <option value="@album.AlbumId">@album.Title</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Dosya URL *</label>
+                <input asp-for="FileUrl" class="form-control" placeholder="https://youtube.com/..." />
+            </div>
+            <div class="form-group">
+                <label>Albüm Kapak URL</label>
+                <input asp-for="AlbumCoverUrl" class="form-control" placeholder="https://..." />
+            </div>
+            <div class="form-group">
+                <label>Seviye</label>
+                <select asp-for="Level" class="form-control">
+                    <option value="1">Ücretsiz</option>
+                    <option value="2">Gold</option>
+                    <option value="3">Premium</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Türler</label>
+                <div class="row">
+                    @foreach (var genre in ViewBag.Genres as List<Core.Entities.Genre>)
+                    {
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input type="checkbox" name="genreIds" value="@genre.GenreId"
+                                       class="form-check-input" id="genre_@genre.GenreId" />
+                                <label class="form-check-label" for="genre_@genre.GenreId">@genre.Name</label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Kaydet
+            </button>
+            <a href="/Admin/Songs" class="btn btn-secondary ml-2">
+                <i class="fas fa-times"></i> İptal
+            </a>
+        </div>
+    </form>
+</div>

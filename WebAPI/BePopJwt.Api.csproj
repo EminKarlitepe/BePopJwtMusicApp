@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.9" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9" />
+
+		<PackageReference Include="Microsoft.ML" Version="4.0.2" />
+		<PackageReference Include="Microsoft.ML.Recommender" Version="0.22.2" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Business\BePopJwt.Business.csproj" />
+		<ProjectReference Include="..\DataAccess\BePopJwt.DataAccess.csproj" />
+		<ProjectReference Include="..\Core\BePopJwt.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="appsettings.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="wwwroot\Bepop\libs\plyrist\dist\" />
+		<Folder Include="wwwroot\uploads\songs\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="wwwroot\AdminLTE-3.1.0\.github\codeql\codeql-config.yml" />
+	  <None Include="wwwroot\AdminLTE-3.1.0\.github\CONTRIBUTING.md" />
+	  <None Include="wwwroot\AdminLTE-3.1.0\.github\dependabot.yml" />
+	  <None Include="wwwroot\AdminLTE-3.1.0\.github\ISSUE_TEMPLATE\bug-report-for-adminlte-v3.1-x.md" />
+	  <None Include="wwwroot\AdminLTE-3.1.0\.github\ISSUE_TEMPLATE\feature-request-for-adminlte-v4-x.md" />
+	  <None Include="wwwroot\AdminLTE-3.1.0\.github\workflows\ci.yml" />
+	  <None Include="wwwroot\AdminLTE-3.1.0\.github\workflows\codeql.yml" />
+	  <None Include="wwwroot\AdminLTE-3.1.0\.github\workflows\docs.yml" />
+	  <None Include="wwwroot\AdminLTE-3.1.0\.github\workflows\lint.yml" />
+	</ItemGroup>
+
+</Project>

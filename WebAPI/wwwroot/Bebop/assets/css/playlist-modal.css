@@ -1,0 +1,171 @@
+﻿/* ===== ÇALMA LİSTESİ MODAL ===== */
+
+.pl-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pl-modal-box {
+    background: #1a1a2e;
+    border: 1px solid #333;
+    border-radius: 12px;
+    width: 340px;
+    max-width: 95vw;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+    animation: plModalIn 0.18s ease;
+}
+
+@keyframes plModalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.94) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.pl-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #333;
+}
+
+.pl-modal-title {
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.pl-modal-close {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+    .pl-modal-close:hover {
+        color: #fff;
+    }
+
+.pl-modal-body {
+    padding: 8px 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.pl-modal-loading,
+.pl-modal-empty {
+    padding: 28px;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+}
+
+.pl-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+    .pl-item:hover {
+        background: rgba(255, 255, 255, 0.07);
+    }
+
+.pl-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: #2a2a3e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #888;
+    font-size: 16px;
+}
+
+.pl-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.pl-item-name {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pl-item-count {
+    color: #888;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.pl-modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid #333;
+}
+
+.pl-modal-new-btn {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    border: 1px dashed #444;
+    border-radius: 8px;
+    color: #aaa;
+    text-decoration: none;
+    font-size: 14px;
+    transition: border-color 0.2s, color 0.2s;
+}
+
+    .pl-modal-new-btn:hover {
+        border-color: #1db954;
+        color: #1db954;
+        text-decoration: none;
+    }
+
+/* ===== ŞARKI KARTLARINDAKI + BUTONU ===== */
+
+.btn-add-playlist {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    transition: background 0.2s, color 0.2s;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+    .btn-add-playlist:hover {
+        background: #1db954;
+        color: #fff;
+    }

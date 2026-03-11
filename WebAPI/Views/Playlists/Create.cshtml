@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Yeni Liste Oluştur";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Yeni Liste Oluştur</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label for="Name">Liste Adı</label>
+        <input id="Name" name="Name" class="form-control" />
+        <div class="text-danger">@((ViewData.ModelState.ContainsKey("Name") && ViewData.ModelState["Name"].Errors.Count > 0) ? ViewData.ModelState["Name"].Errors[0].ErrorMessage : "")</div>
+    </div>
+    <button type="submit" class="btn btn-primary">Oluştur</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary ml-2">Geri</a>
+</form>
+

@@ -1,0 +1,87 @@
+@using Core.Entities
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int currentLevel = ViewBag.CurrentLevel ?? 1;
+    var packages = ViewBag.Packages as List<Product> ?? new List<Product>();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Bebop/assets/css/membership.css" />
+}
+
+<div class="py-5">
+    <div class="container text-center mb-5">
+        <h1 class="display-4 font-weight-bold mb-3">Planını Seç, Özgürce Dinle</h1>
+        <p class="lead text-muted">İstediğin zaman yükseltebilir veya değiştirebilirsin.</p>
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="container">
+            <div class="alert alert-success alert-dismissible fade show">
+                @TempData["Message"]
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+        </div>
+    }
+
+    <div class="container pricing-container">
+        <form asp-controller="Membership" asp-action="Upgrade" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row justify-content-center">
+                @foreach (var p in packages)
+                {
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="card pricing-card p-4 @(p.Level == currentLevel ? "current-plan-border" : "")">
+
+                            @if (p.Level == currentLevel)
+                            {
+                                <div class="current-badge">Aktif Planın</div>
+                            }
+
+                            <div class="text-center">
+                                <h4 class="font-weight-bold mb-0">@p.Name</h4>
+                                <div class="card-price">
+                                    @(p.Price == 0 ? "Ücretsiz" : "₺" + p.Price.ToString("0.00"))
+                                    @if (p.Price > 0)
+                                    {
+                                        <small>/ ay</small>
+                                    }
+                                </div>
+                            </div>
+
+                            <ul class="feature-list flex-grow-1">
+                                @if (!string.IsNullOrEmpty(p.Features))
+                                {
+                                    foreach (var f in p.Features.Split(','))
+                                    {
+                                        <li><i class="fas fa-check-circle"></i> @f.Trim()</li>
+                                    }
+                                }
+                            </ul>
+
+                            <div class="mt-3">
+                                @if (p.Level == currentLevel)
+                                {
+                                    <button type="button" class="btn btn-outline-light btn-block py-2" disabled>
+                                        Şu Anki Planın
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="submit" name="newLevel" value="@p.Level" class="btn btn-upgrade btn-block py-2">
+                                        @(p.Level > currentLevel ? "Hemen Yükselt" : "Paketi Düşür")
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </form>
+
+        <div class="text-center mt-5">
+            <a href="/Home/Index" class="text-muted"><i class="fas fa-arrow-left mr-2"></i> Ana sayfaya geri dön</a>
+        </div>
+    </div>
+</div>

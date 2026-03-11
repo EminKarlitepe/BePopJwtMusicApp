@@ -1,0 +1,153 @@
+@{
+    ViewData["Title"] = "Ana Sayfa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Bebop/assets/css/home.css" asp-append-version="true" />
+}
+
+<div class="home-page">
+
+    <section class="home-hero">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-noise"></div>
+        <div class="hero-content">
+            <div class="hero-left">
+                <div class="hero-eyebrow">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /></svg>
+                    Müziğin yeni adresi
+                </div>
+                <h1 class="hero-title">
+                    Sesi Hisset,<br>
+                    Ritmi <span>Yakala.</span>
+                </h1>
+                <p class="hero-desc">
+                    Milyonlarca şarkı, sanatçı ve albüm tek bir platformda.
+                    Kendi müzik evrenini inşa et, yeni sesler keşfet.
+                </p>
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <div class="hero-btns">
+                        <a href="@Url.Action("Index", "Discover")" class="btn-hero-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,3 20,12 6,21" /></svg>
+                            Müzikleri Keşfet
+                        </a>
+                        <a href="@Url.Action("Upgrade", "Membership")" class="btn-hero-secondary">Paketi Gör</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="hero-btns">
+                        <a href="@Url.Action("Register", "Auth")" class="btn-hero-primary">
+                            Ücretsiz Başla
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12,5 19,12 12,19" /></svg>
+                        </a>
+                        <a href="@Url.Action("Login", "Auth")" class="btn-hero-secondary">Giriş Yap</a>
+                    </div>
+                }
+            </div>
+
+            <div class="hero-right">
+                <div class="mosaic-glow"></div>
+                <div class="mosaic">
+                    <div class="mosaic-item tall" style="background-image:url('/Bebop/assets/img/b8.jpg')"></div>
+                    <div class="mosaic-item" style="background-image:url('/Bebop/assets/img/b2.jpg')"></div>
+                    <div class="mosaic-item" style="background-image:url('/Bebop/assets/img/b17.jpg')"></div>
+                    <div class="mosaic-item" style="background-image:url('/Bebop/assets/img/b9.jpg')"></div>
+                    <div class="mosaic-item" style="background-image:url('/Bebop/assets/img/b4.jpg')"></div>
+                    <div class="mosaic-item tall" style="background-image:url('/Bebop/assets/img/b15.jpg')"></div>
+                    <div class="mosaic-item wide" style="background-image:url('/Bebop/assets/img/b20.jpg')"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="features-strip">
+        <div class="feature-item">
+            <div class="feature-icon green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>
+            </div>
+            <div>
+                <div class="feature-text-title">Milyonlarca Şarkı</div>
+                <div class="feature-text-desc">Her türden müzik, tek platformda</div>
+            </div>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon purple">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+            </div>
+            <div>
+                <div class="feature-text-title">Akıllı Öneriler</div>
+                <div class="feature-text-desc">Zevkine göre kişiselleştirilmiş listeler</div>
+            </div>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon pink">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+            </div>
+            <div>
+                <div class="feature-text-title">Sanatçıları Takip Et</div>
+                <div class="feature-text-desc">En sevdiğin sanatçıların haberdar ol</div>
+            </div>
+        </div>
+        <div class="feature-item">
+            <div class="feature-icon green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>
+            </div>
+            <div>
+                <div class="feature-text-title">Çalma Listeleri</div>
+                <div class="feature-text-desc">Kendi listeni oluştur ve paylaş</div>
+            </div>
+        </div>
+    </div>
+
+    <section class="packages-section">
+        <div class="section-eyebrow">Paketler</div>
+        <h2 class="section-heading">Sana Özel Bir Plan Var</h2>
+        <div class="packages-grid">
+            <div class="pkg-card">
+                <div class="pkg-name">Ücretsiz</div>
+                <div class="pkg-price">₺0 <span>/ ay</span></div>
+                <div class="pkg-desc">Başlangıç için mükemmel</div>
+                <ul class="pkg-features">
+                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg> Reklamlı dinleme</li>
+                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg> Standart ses kalitesi</li>
+                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg> Sınırlı atlama</li>
+                </ul>
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a href="@Url.Action("Index", "Discover")" class="pkg-btn light">Keşfet</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Register", "Auth")" class="pkg-btn light">Ücretsiz Başla</a>
+                }
+            </div>
+            <div class="pkg-card popular">
+                <div class="pkg-popular-badge">Popüler</div>
+                <div class="pkg-name">Gold</div>
+                <div class="pkg-price">₺89 <span>/ ay</span></div>
+                <div class="pkg-desc">En çok tercih edilen</div>
+                <ul class="pkg-features">
+                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg> Reklamsız dinleme</li>
+                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg> Yüksek ses kalitesi</li>
+                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg> Sınırsız atlama</li>
+                </ul>
+                <a href="@Url.Action("Upgrade", "Membership")" class="pkg-btn accent">Gold'a Geç</a>
+            </div>
+            <div class="pkg-card">
+                <div class="pkg-name">Premium</div>
+                <div class="pkg-price">₺129 <span>/ ay</span></div>
+                <div class="pkg-desc">Eksiksiz müzik deneyimi</div>
+                <ul class="pkg-features">
+                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg> Çevrimdışı dinleme</li>
+                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg> Ultra HD ses</li>
+                    <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg> 3 cihaz aynı anda</li>
+                </ul>
+                <a href="@Url.Action("Upgrade", "Membership")" class="pkg-btn light">Premium'a Geç</a>
+            </div>
+        </div>
+    </section>
+
+</div>
