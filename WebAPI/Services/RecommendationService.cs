@@ -8,7 +8,8 @@ namespace BepopStreamProject.Services
     public class RecommendationService
     {
         private readonly MLContext _mlContext;
-        private ITransformer _model;
+        private ITransformer? _model;
+        private PredictionEngine<SongRating, SongPrediction>? _predictionEngine;
 
         public RecommendationService()
         {
@@ -17,6 +18,8 @@ namespace BepopStreamProject.Services
 
         public void TrainModel(IEnumerable<PlayHistory> historyData)
         {
+            if (_model != null) return;
+
             var data = historyData.Select(h => new SongRating
             {
                 UserId = h.UserId,
@@ -40,20 +43,25 @@ namespace BepopStreamProject.Services
                     approximationRank: 100));
 
             _model = pipeline.Fit(trainingData);
+
+            _predictionEngine = _mlContext.Model
+                .CreatePredictionEngine<SongRating, SongPrediction>(_model);
         }
 
         public float PredictScore(int userId, int songId)
         {
-            var predictionEngine = _mlContext.Model.CreatePredictionEngine<SongRating, SongPrediction>(_model);
+            if (_predictionEngine == null)
+                throw new InvalidOperationException("Model henüz eğitilmedi. Önce TrainModel çağırın.");
 
-            var prediction = predictionEngine.Predict(new SongRating
+            var prediction = _predictionEngine.Predict(new SongRating
             {
                 UserId = userId,
                 SongId = songId
             });
 
-            return prediction.Score; 
+            return prediction.Score;
         }
+
         public List<int> RecommendSongsForUser(int userId, List<int> allSongIds, List<int> userPlayedSongIds, int topN = 5)
         {
             var candidateSongs = allSongIds.Except(userPlayedSongIds);
@@ -62,7 +70,7 @@ namespace BepopStreamProject.Services
                 .Select(songId => new
                 {
                     SongId = songId,
-                    Score = PredictScore(userId, songId) 
+                    Score = PredictScore(userId, songId)
                 })
                 .OrderByDescending(s => s.Score)
                 .Take(topN)
@@ -71,6 +79,5 @@ namespace BepopStreamProject.Services
 
             return scoredSongs;
         }
-
     }
 }
