@@ -10,7 +10,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Servisler
 builder.Services.AddScoped<JwtTokenGenerator>();
 builder.Services.AddSingleton<RecommendationService>();
 builder.Services.AddBusinessServices();
@@ -20,7 +19,6 @@ builder.Services.AddDbContext<BepopDbContext>(options =>
 
 builder.Services.AddAuthentication(options =>
 {
-    // Web taraf� (MVC) i�in varsay�lan olarak Cookie kullan�yoruz
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -30,7 +28,7 @@ builder.Services.AddAuthentication(options =>
     options.LoginPath = "/Auth/Login";
     options.AccessDeniedPath = "/Auth/Login";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-    options.SlidingExpiration = true; // Kullan�c� aktifse s�reyi uzat�r
+    options.SlidingExpiration = true; 
     options.Cookie.HttpOnly = true;
     options.Cookie.SameSite = SameSiteMode.Lax;
 })
@@ -47,7 +45,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
-    // Cookie i�indeki JWT'yi okumak i�in (API istekleri i�in)
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -73,11 +70,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // Routing'den �nce olmal�
+app.UseStaticFiles(); 
 app.UseRouting();
 
-app.UseAuthentication(); // Kimlik do�rulama (Ben kimim?)
-app.UseAuthorization();  // Yetkilendirme (Buraya girebilir miyim?)
+app.UseAuthentication();
+app.UseAuthorization(); 
 
 app.MapControllerRoute(
     name: "default",

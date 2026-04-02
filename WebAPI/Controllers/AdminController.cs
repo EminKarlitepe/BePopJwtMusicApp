@@ -242,7 +242,6 @@ namespace BepopStreamProject.Controllers
             _context.Songs.Add(song);
             await _context.SaveChangesAsync();
 
-            // Save selected genres
             if (model.GenreIds != null && model.GenreIds.Count > 0)
             {
                 foreach (var gid in model.GenreIds.Distinct())
@@ -331,7 +330,6 @@ namespace BepopStreamProject.Controllers
         [HttpPost]
         public IActionResult CreateAlbum(Album album)
         {
-            // Attempt to resolve artist when client only supplied the name (artistName)
             if (album.ArtistId == 0)
             {
                 var artistName = Request.Form["artistName"].ToString();

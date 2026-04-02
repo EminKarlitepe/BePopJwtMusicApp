@@ -23,7 +23,6 @@ namespace BepopStreamProject.Controllers
         {
             var userId = User.GetUserId();
 
-            // Level'ı DB'den oku — cookie'ye güvenme
             var user = _context.Users.FirstOrDefault(u => u.UserId == userId);
             var userLevel = user?.MembershipLevel ?? 0;
 
@@ -99,7 +98,6 @@ namespace BepopStreamProject.Controllers
 
             var playCount = _context.PlayHistories.Count(p => p.SongId == id);
 
-            // UserLevel'ı da DB'den oku
             var dbUser = _context.Users.FirstOrDefault(u => u.UserId == userId);
             var userLevel = dbUser?.MembershipLevel ?? 0;
 

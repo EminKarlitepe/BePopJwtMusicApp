@@ -23,7 +23,6 @@ namespace BepopStreamProject.Helpers
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
 
-            // Kullanýcýnýn rollerini veritabanýndan çek
             var userRoles = _context.UserRoles
                 .Where(ur => ur.UserId == user.UserId)
                 .Join(_context.Roles, ur => ur.RoleId, r => r.RoleId, (ur, r) => r.Name)
@@ -40,13 +39,11 @@ namespace BepopStreamProject.Helpers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            // Rolleri claim olarak ekle
             foreach (var role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            // Hiç rol yoksa varsayýlan User ekle
             if (!userRoles.Any())
             {
                 claims.Add(new Claim(ClaimTypes.Role, "User"));

@@ -6,10 +6,9 @@ namespace BepopStreamProject.Helpers
     {
         public static int GetUserLevel(this ClaimsPrincipal user)
         {
-            // Önce cookie tabanlı MVC oturumu için kullanılan claim'leri dene
             var levelValue =
-                user.FindFirst("MembershipLevel")?.Value ?? // Cookie'de kullanılan ad
-                user.FindFirst("membershipLevel")?.Value ?? // JWT içinde kullanılan ad
+                user.FindFirst("MembershipLevel")?.Value ??
+                user.FindFirst("membershipLevel")?.Value ?? 
                 "0";
 
             return int.TryParse(levelValue, out var level) ? level : 0;
@@ -17,10 +16,9 @@ namespace BepopStreamProject.Helpers
 
         public static int GetUserId(this ClaimsPrincipal user)
         {
-            // Hem JWT hem de Cookie oturumu için olası tüm claim adlarını dene
             var idValue =
-                user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? // Standart ASP.NET kimlik claim'i
-                user.FindFirst("userId")?.Value ??                 // JWT'de kullanılan özel claim
+                user.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? 
+                user.FindFirst("userId")?.Value ??                 
                 "0";
 
             return int.TryParse(idValue, out var id) ? id : 0;
@@ -28,8 +26,8 @@ namespace BepopStreamProject.Helpers
         public static string GetUsername(this ClaimsPrincipal user)
         {
             return
-                user.FindFirst(ClaimTypes.Name)?.Value ??   // Cookie'de kullanılan standart ad
-                user.FindFirst("username")?.Value ??        // JWT'de kullanılan özel ad
+                user.FindFirst(ClaimTypes.Name)?.Value ??   
+                user.FindFirst("username")?.Value ??        
                 "Misafir";
         }
     }

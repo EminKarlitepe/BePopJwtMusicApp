@@ -12,7 +12,6 @@ namespace Business
     {
         public static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
-            // Servisler
             services.AddScoped<ISongService, SongManager>();
             services.AddScoped<IUserService, UserManager>();
             services.AddScoped<IPlaylistService, PlaylistManager>();
@@ -21,7 +20,6 @@ namespace Business
             services.AddScoped<IGenreService, GenreManager>();
             services.AddScoped<IMembershipService, MembershipManager>();
 
-            // FluentValidation
             services.AddScoped<IValidator<UserRegisterDto>, UserRegisterValidator>();
             services.AddScoped<IValidator<UserLoginDto>, UserLoginValidator>();
             services.AddScoped<IValidator<Song>, SongValidator>();
